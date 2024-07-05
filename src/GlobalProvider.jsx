@@ -7,9 +7,10 @@ export const useGlobalContext = () => useContext(GlobalContext);
 
 const GlobalProvider = ({ children }) => {
   const [started, setStarted] = useState(false);
+  const [ready, setReady] = useState(false);
 
   return (
-    <GlobalContext.Provider value={{ started, setStarted }}>
+    <GlobalContext.Provider value={{ started, setStarted, ready, setReady }}>
       {children}
     </GlobalContext.Provider>
   );
