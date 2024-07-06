@@ -1,6 +1,16 @@
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: var(--mantine-color-red-1);
+@keyframes pop {
+  0% {
+    transform: scale(1.4);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pop {
+  display: inline-block;
+  animation: pop 0.1s ease-in-out;
 }

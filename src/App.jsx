@@ -10,7 +10,7 @@ function App() {
 
   const { setColorScheme } = useMantineColorScheme();
 
-  useEffect(() => setColorScheme("dark"), []);
+  useEffect(() => setColorScheme("dark"), [setColorScheme]);
 
   return (
     <div>
