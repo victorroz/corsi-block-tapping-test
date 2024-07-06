@@ -1,6 +1,7 @@
 import { List, Button, Center } from "@mantine/core";
 
 import { useGlobalContext } from "./GlobalProvider";
+import Countdown from "./Countdown";
 
 const Instructions = () => {
   const { ready, setReady } = useGlobalContext();
@@ -16,8 +17,8 @@ const Instructions = () => {
               Some blocks will <strong>light up</strong> (yellow) in a sequence.
             </List.Item>
             <List.Item>
-              Once you hear <strong>GO</strong>, you will need to click the same
-              blocks in the same sequence.
+              Once you hear <strong>GO</strong>, you need to click on the blocks
+              in the same sequence.
             </List.Item>
             <List.Item>The sequences will get longer.</List.Item>
           </List>
@@ -34,7 +35,7 @@ const Instructions = () => {
           </Center>
         </>
       ) : (
-        "Blocks"
+        <Countdown />
       )}
     </>
   );
