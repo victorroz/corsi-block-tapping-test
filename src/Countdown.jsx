@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { Center } from "@mantine/core";
+import useSound from "use-sound";
 import CorsiBlocks from "./CorsiBlocks";
+
+import go from "../public/go.mp3";
 
 const Countdown = () => {
   const counter = [3, 2, 1];
@@ -28,10 +31,15 @@ const Countdown = () => {
     }
   }, [popClass]);
 
+  const [play] = useSound(go);
+
   return (
     <>
       {index === 3 ? (
-        <CorsiBlocks />
+        <>
+          {play()}
+          <CorsiBlocks />
+        </>
       ) : (
         <>
           <h3>Get ready in</h3>
