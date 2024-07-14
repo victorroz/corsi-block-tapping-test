@@ -21,6 +21,12 @@ const Instructions = () => {
               in the same sequence.
             </List.Item>
             <List.Item>The sequences will get longer.</List.Item>
+            <List.Item>
+              <b>
+                <u>KEEP IN MIND</u>
+              </b>
+              , once you select a block you cannot unselect it.
+            </List.Item>
           </List>
 
           <Center mt={50}>
