@@ -19,7 +19,7 @@ const Countdown = () => {
 
       return () => clearTimeout(timer);
     }
-  }, [index]);
+  }, [index, counter.length]);
 
   useEffect(() => {
     if (popClass) {
