@@ -1,3 +1,6 @@
+/* 
+ * Countdown
+ */
 @keyframes pop {
   0% {
     transform: scale(1.4);
@@ -13,4 +16,41 @@
 .pop {
   display: inline-block;
   animation: pop 0.1s ease-in-out;
+}
+
+
+/* 
+ * CorsiBlocks
+ */
+.block-container {
+  background-color: #A61E4D;
+  width: 200px;
+  height: 200px;
+  content-visibility: hidden;
+}
+
+.block-container:hover {
+  cursor: pointer;
+  background-color: #bb2358;
+}
+
+.block-container-hidden {
+  background-color: transparent;
+  width: 200px;
+  height: 200px;
+  content-visibility: hidden;
+}
+
+.block-container-hidden:hover {
+  cursor: default;
+}
+
+.button-container {
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.block-container.active {
+  background-color: yellow;
 }

@@ -3,7 +3,7 @@ import { Center } from "@mantine/core";
 import useSound from "use-sound";
 import CorsiBlocks from "./CorsiBlocks";
 
-import go from "../public/go.mp3";
+import go from "/go.mp3";
 
 const Countdown = () => {
   const counter = [3, 2, 1];
