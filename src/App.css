@@ -51,6 +51,6 @@
   font-size: 1.5rem;
 }
 
-.block-container.active {
-  background-color: yellow;
+.block-container-active {
+  background-color: #fcc419;
 }
