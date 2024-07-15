@@ -32,9 +32,9 @@ const CorsiBlocks = () => {
   useEffect(() => {
     if (activeSequence.length === 0) return;
 
-    play();
-
     let currentSeqIndex = 0;
+
+    play();
 
     const interval = setInterval(() => {
       setSequenceIndex(activeSequence[currentSeqIndex]);
@@ -121,11 +121,7 @@ const CorsiBlocks = () => {
             {block.id}
           </div>
         ))}
-        <button
-          className="button-container"
-          onClick={handleClick}
-          disabled={isSequenceActive}
-        >
+        <button className="button-container" onClick={handleClick}>
           Done
         </button>
       </SimpleGrid>
