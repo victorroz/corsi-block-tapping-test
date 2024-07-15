@@ -7,7 +7,7 @@ const Instructions = () => {
   const { ready, setReady } = useGlobalContext();
 
   return (
-    <>
+    <Center className="center">
       {!ready ? (
         <>
           <List type="ordered" size="xl" withPadding spacing={10}>
@@ -43,7 +43,7 @@ const Instructions = () => {
       ) : (
         <Countdown />
       )}
-    </>
+    </Center>
   );
 };
 
