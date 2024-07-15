@@ -50,7 +50,7 @@ const CorsiBlocks = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [activeSequence, rerunSequence]);
+  }, [activeSequence, rerunSequence, play]);
 
   const handleBlockClick = (id) => {
     if (isSequenceActive) return;
