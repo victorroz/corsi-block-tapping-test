@@ -32,6 +32,8 @@ const CorsiBlocks = () => {
   useEffect(() => {
     if (activeSequence.length === 0) return;
 
+    play();
+
     let currentSeqIndex = 0;
 
     const interval = setInterval(() => {
@@ -75,7 +77,6 @@ const CorsiBlocks = () => {
       setAttempts(0);
       setCorrectReplications((prev) => prev + 1);
       setActiveSequenceIndex((prev) => (prev + 1) % numOfSequences);
-      play();
     } else {
       setAttempts((prev) => prev + 1);
       if (attempts + 1 >= 2) {
@@ -120,7 +121,11 @@ const CorsiBlocks = () => {
             {block.id}
           </div>
         ))}
-        <button className="button-container" onClick={handleClick}>
+        <button
+          className="button-container"
+          onClick={handleClick}
+          disabled={isSequenceActive}
+        >
           Done
         </button>
       </SimpleGrid>
