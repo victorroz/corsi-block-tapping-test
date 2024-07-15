@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { useGlobalContext } from "./GlobalProvider";
 
-import { Button, useMantineColorScheme } from "@mantine/core";
+import { Flex, Button, TextInput, useMantineColorScheme } from "@mantine/core";
 import "./App.css";
 import Instructions from "./Instructions";
 
 function App() {
-  const { started, setStarted } = useGlobalContext();
+  const { started, setStarted, participantId, setParticipantId } =
+    useGlobalContext();
 
   const { setColorScheme } = useMantineColorScheme();
 
@@ -15,14 +16,30 @@ function App() {
   return (
     <div>
       {!started ? (
-        <Button
-          variant="outline"
-          color="orange"
-          size="xl"
-          onClick={() => setStarted(true)}
+        <Flex
+          gap="md"
+          justify="center"
+          align="center"
+          direction="column"
+          wrap="wrap"
         >
-          Click me to start
-        </Button>
+          <TextInput
+            variant="filled"
+            size="xl"
+            placeholder="Enter Participant ID"
+            value={participantId}
+            onChange={(e) => setParticipantId(e.currentTarget.value)}
+          />
+          <Button
+            variant="outline"
+            color="orange"
+            size="xl"
+            onClick={() => setStarted(true)}
+            disabled={!participantId}
+          >
+            Click me to start
+          </Button>
+        </Flex>
       ) : (
         <Instructions />
       )}

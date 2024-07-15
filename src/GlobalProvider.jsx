@@ -8,9 +8,19 @@ export const useGlobalContext = () => useContext(GlobalContext);
 const GlobalProvider = ({ children }) => {
   const [started, setStarted] = useState(false);
   const [ready, setReady] = useState(false);
+  const [participantId, setParticipantId] = useState("");
 
   return (
-    <GlobalContext.Provider value={{ started, setStarted, ready, setReady }}>
+    <GlobalContext.Provider
+      value={{
+        started,
+        setStarted,
+        ready,
+        setReady,
+        participantId,
+        setParticipantId,
+      }}
+    >
       {children}
     </GlobalContext.Provider>
   );
