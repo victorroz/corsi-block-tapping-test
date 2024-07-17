@@ -79,3 +79,12 @@
 .block-container-active:hover {
   background-color: #fcc419;
 }
+
+/* 
+ * Completion
+ */
+.completion-text {
+  font-size: 2rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 2px !important;
+}

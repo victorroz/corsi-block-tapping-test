@@ -6,6 +6,8 @@ import { useGlobalContext } from "./GlobalProvider";
 import { blocks } from "./data/blocks";
 import { sequences } from "./data/sequences";
 
+import Completion from "./Completion";
+
 const CorsiBlocks = () => {
   const { participantId, setParticipantId } = useGlobalContext();
 
@@ -19,6 +21,7 @@ const CorsiBlocks = () => {
   const [rerunSequence, setRerunSequence] = useState(false);
   const [selectionsRecord, setSelectionsRecord] = useState([]);
   const [correctReplications, setCorrectReplications] = useState(1);
+  const [hasDownloaded, setHasDownloaded] = useState(false);
 
   useEffect(() => {
     setActiveSequence(sequences[activeSequenceIndex]);
@@ -101,28 +104,35 @@ const CorsiBlocks = () => {
     `;
     const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
     saveAs(blob, `${participantId}.txt`);
+    setHasDownloaded(true);
   };
 
   return (
-    <Container fluid>
-      <SimpleGrid cols={5} spacing="xl" verticalSpacing="xl">
-        {blocks.map((block) => (
-          <div
-            key={block.id}
-            className={`${
-              block.active ? "block-container" : "block-container-hidden"
-            } ${block.id === sequenceIndex ? "block-container-active" : ""} 
+    <>
+      {hasDownloaded ? (
+        <Completion />
+      ) : (
+        <Container fluid>
+          <SimpleGrid cols={5} spacing="xl" verticalSpacing="xl">
+            {blocks.map((block) => (
+              <div
+                key={block.id}
+                className={`${
+                  block.active ? "block-container" : "block-container-hidden"
+                } ${block.id === sequenceIndex ? "block-container-active" : ""} 
             ${userSequence.includes(block.id) && "block-container-active"}`}
-            onClick={() => handleBlockClick(block.id)}
-          >
-            {block.id}
-          </div>
-        ))}
-        <button className="button-container" onClick={handleClick}>
-          Done
-        </button>
-      </SimpleGrid>
-    </Container>
+                onClick={() => handleBlockClick(block.id)}
+              >
+                {block.id}
+              </div>
+            ))}
+            <button className="button-container" onClick={handleClick}>
+              Done
+            </button>
+          </SimpleGrid>
+        </Container>
+      )}
+    </>
   );
 };
 
