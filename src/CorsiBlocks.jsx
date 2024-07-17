@@ -1,16 +1,13 @@
 import { useState, useEffect } from "react";
 import { Container, SimpleGrid } from "@mantine/core";
-import useSound from "use-sound";
 import { saveAs } from "file-saver";
 import { useGlobalContext } from "./GlobalProvider";
 
 import { blocks } from "./data/blocks";
 import { sequences } from "./data/sequences";
-import go from "/go.mp3";
 
 const CorsiBlocks = () => {
   const { participantId, setParticipantId } = useGlobalContext();
-  const [play] = useSound(go);
   const numOfSequences = sequences.length;
   const [activeSequenceIndex, setActiveSequenceIndex] = useState(0);
   const [activeSequence, setActiveSequence] = useState([]);
@@ -34,8 +31,6 @@ const CorsiBlocks = () => {
 
     let currentSeqIndex = 0;
 
-    play();
-
     const interval = setInterval(() => {
       setSequenceIndex(activeSequence[currentSeqIndex]);
       currentSeqIndex++;
@@ -50,7 +45,7 @@ const CorsiBlocks = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [activeSequence, rerunSequence, play]);
+  }, [activeSequence, rerunSequence]);
 
   const handleBlockClick = (id) => {
     if (isSequenceActive) return;
