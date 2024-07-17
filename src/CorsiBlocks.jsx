@@ -109,7 +109,7 @@ const CorsiBlocks = () => {
 
   return (
     <>
-      {hasDownloaded ? (
+      {hasDownloaded || correctReplications === 9 ? (
         <Completion />
       ) : (
         <Container fluid>
@@ -120,7 +120,9 @@ const CorsiBlocks = () => {
                 className={`${
                   block.active ? "block-container" : "block-container-hidden"
                 } ${block.id === sequenceIndex ? "block-container-active" : ""} 
-            ${userSequence.includes(block.id) && "block-container-active"}`}
+                  ${
+                    userSequence.includes(block.id) && "block-container-active"
+                  }`}
                 onClick={() => handleBlockClick(block.id)}
               >
                 {block.id}
