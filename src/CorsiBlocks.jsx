@@ -8,6 +8,7 @@ import { sequences } from "./data/sequences";
 
 const CorsiBlocks = () => {
   const { participantId, setParticipantId } = useGlobalContext();
+
   const numOfSequences = sequences.length;
   const [activeSequenceIndex, setActiveSequenceIndex] = useState(0);
   const [activeSequence, setActiveSequence] = useState([]);
@@ -110,7 +111,8 @@ const CorsiBlocks = () => {
             key={block.id}
             className={`${
               block.active ? "block-container" : "block-container-hidden"
-            } ${block.id === sequenceIndex ? "block-container-active" : ""}`}
+            } ${block.id === sequenceIndex ? "block-container-active" : ""} 
+            ${userSequence.includes(block.id) && "block-container-active"}`}
             onClick={() => handleBlockClick(block.id)}
           >
             {block.id}

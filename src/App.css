@@ -75,3 +75,7 @@
 .block-container-active {
   background-color: #fcc419;
 }
+
+.block-container-active:hover {
+  background-color: #fcc419;
+}
