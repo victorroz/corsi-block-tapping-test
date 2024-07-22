@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Container, SimpleGrid } from "@mantine/core";
+import { Container, SimpleGrid, Center } from "@mantine/core";
 import { saveAs } from "file-saver";
 import { useGlobalContext } from "./GlobalProvider";
 
@@ -109,7 +109,7 @@ const CorsiBlocks = () => {
 
   return (
     <>
-      {hasDownloaded || correctReplications === 9 ? (
+      {hasDownloaded || correctReplications === numOfSequences ? (
         <Completion />
       ) : (
         <Container fluid>
@@ -128,10 +128,12 @@ const CorsiBlocks = () => {
                 {block.id}
               </div>
             ))}
+          </SimpleGrid>
+          <Center mt={100}>
             <button className="button-container" onClick={handleClick}>
               Done
             </button>
-          </SimpleGrid>
+          </Center>
         </Container>
       )}
     </>

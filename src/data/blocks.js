@@ -69,14 +69,14 @@ export const blocks = [
   },
   {
     id: 18,
-    active: true,
+    active: false,
   },
   {
     id: 19,
+    active: true,
+  },
+  {
+    id: 20,
     active: false,
   },
-  // {
-  //   id: 20,
-  //   active: false,
-  // },
 ];
