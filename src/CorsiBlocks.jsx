@@ -22,13 +22,18 @@ const CorsiBlocks = () => {
   const [selectionsRecord, setSelectionsRecord] = useState([]);
   const [correctReplications, setCorrectReplications] = useState(1);
   const [hasDownloaded, setHasDownloaded] = useState(false);
+  const [reverseSequence, setReverseSequence] = useState(false);
 
   useEffect(() => {
-    setActiveSequence(sequences[activeSequenceIndex]);
+    let sequence = sequences[activeSequenceIndex];
+    if (reverseSequence) {
+      sequence = [...sequence].reverse();
+    }
+    setActiveSequence(sequence);
     setSequenceIndex(-1);
     setUserSequence([]);
     setIsSequenceActive(true);
-  }, [activeSequenceIndex]);
+  }, [activeSequenceIndex, reverseSequence]);
 
   useEffect(() => {
     if (activeSequence.length === 0) return;
@@ -76,6 +81,8 @@ const CorsiBlocks = () => {
       setAttempts(0);
       setCorrectReplications((prev) => prev + 1);
       setActiveSequenceIndex((prev) => (prev + 1) % numOfSequences);
+      console.log(`Correctly replicated sequences: ${correctReplications}`);
+      setReverseSequence(false); // Reset the reverse sequence flag
     } else {
       setAttempts((prev) => prev + 1);
       if (attempts + 1 >= 2) {
@@ -86,6 +93,7 @@ const CorsiBlocks = () => {
         return;
       }
 
+      setReverseSequence(true); // Set the flag to reverse the sequence
       setRerunSequence((prev) => !prev);
       setSequenceIndex(-1);
       setIsSequenceActive(true);
