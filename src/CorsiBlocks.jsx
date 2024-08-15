@@ -66,6 +66,7 @@ const CorsiBlocks = () => {
     const isCorrect = userSequence.every(
       (id, index) => id === activeSequence[index]
     );
+
     console.log(isCorrect ? "Correct sequence!" : "Incorrect sequence.");
 
     setSelectionsRecord((prev) => [
@@ -82,9 +83,16 @@ const CorsiBlocks = () => {
       setCorrectReplications((prev) => prev + 1);
       setActiveSequenceIndex((prev) => (prev + 1) % numOfSequences);
       console.log(`Correctly replicated sequences: ${correctReplications}`);
-      setReverseSequence(false); // Reset the reverse sequence flag
+      setReverseSequence(false);
+
+      if (correctReplications === numOfSequences) {
+        handleDownload();
+        setParticipantId("");
+        return;
+      }
     } else {
       setAttempts((prev) => prev + 1);
+
       if (attempts + 1 >= 2) {
         console.log("Program stopped. Too many incorrect attempts.");
         console.log(`Correctly replicated sequences: ${correctReplications}`);
@@ -93,7 +101,7 @@ const CorsiBlocks = () => {
         return;
       }
 
-      setReverseSequence(true); // Set the flag to reverse the sequence
+      setReverseSequence(true);
       setRerunSequence((prev) => !prev);
       setSequenceIndex(-1);
       setIsSequenceActive(true);
@@ -117,7 +125,7 @@ const CorsiBlocks = () => {
 
   return (
     <>
-      {hasDownloaded || correctReplications === numOfSequences ? (
+      {hasDownloaded ? (
         <Completion />
       ) : (
         <Container fluid>
@@ -131,7 +139,7 @@ const CorsiBlocks = () => {
                   ${
                     userSequence.includes(block.id) && "block-container-active"
                   }`}
-                onClick={() => handleBlockClick(block.id)}
+                onClick={() => block.active && handleBlockClick(block.id)}
               >
                 {block.id}
               </div>
