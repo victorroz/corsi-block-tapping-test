@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
 import { Container, SimpleGrid, Center, Button } from "@mantine/core";
 import { saveAs } from "file-saver";
+import useSound from "use-sound";
 import { useGlobalContext } from "./GlobalProvider";
 
 import { blocks } from "./data/blocks";
 import { sequences } from "./data/sequences";
-
+import go from "./go.mp3";
 import Completion from "./Completion";
 
 const CorsiBlocks = () => {
   const { participantId, setParticipantId } = useGlobalContext();
+  const [play] = useSound(go);
 
   const numOfSequences = sequences.length;
   const [activeSequenceIndex, setActiveSequenceIndex] = useState(0);
@@ -36,7 +38,7 @@ const CorsiBlocks = () => {
     setIsSequenceActive(true);
   }, [activeSequenceIndex, reverseSequence, rerunSequence]);
 
-  // Play sequence
+  // Display sequence blocks, then play sound when finished
   useEffect(() => {
     if (!isSequenceActive || activeSequence.length === 0) return;
 
@@ -49,12 +51,14 @@ const CorsiBlocks = () => {
         setTimeout(() => {
           setSequenceIndex(-1);
           setIsSequenceActive(false);
+          // Signal user turn
+          play();
         }, 1000);
       }
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [activeSequence, isSequenceActive]);
+  }, [activeSequence, isSequenceActive, play]);
 
   const handleBlockClick = (id) => {
     if (isSequenceActive) return;
@@ -87,21 +91,17 @@ const CorsiBlocks = () => {
     ]);
 
     if (isCorrect) {
-      // Correct on first or second attempt
       setAttempts(0);
       setReverseSequence(false);
       setCorrectReplications((prev) => prev + 1);
       setActiveSequenceIndex((prev) => (prev + 1) % numOfSequences);
     } else {
-      // Incorrect
       setAttempts((prev) => {
         const next = prev + 1;
         if (next === 1) {
-          // First failure: rerun reversed
           setReverseSequence(true);
           setRerunSequence((r) => !r);
         } else if (next >= 2) {
-          // Second failure: stop and download
           handleDownload();
           setParticipantId("");
         }
