@@ -89,3 +89,16 @@
   font-weight: 500 !important;
   letter-spacing: 2px !important;
 }
+
+.go-btn {
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 2px;
+  border: none;
+  cursor: pointer;
+}
+
+.go-btn:hover {
+  background-color: #A61E4D;
+  transition: all 0.2s ease-in-out;
+}

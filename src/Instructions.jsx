@@ -1,10 +1,15 @@
 import { List, Button, Center } from "@mantine/core";
+import useSound from "use-sound";
+import "./App.css";
 
 import { useGlobalContext } from "./GlobalProvider";
 import Countdown from "./Countdown";
+import go from "./go.mp3";
 
 const Instructions = () => {
   const { ready, setReady } = useGlobalContext();
+
+  const [play] = useSound(go);
 
   return (
     <Center className="center">
@@ -17,8 +22,11 @@ const Instructions = () => {
               Some blocks will <strong>light up</strong> (yellow) in a sequence.
             </List.Item>
             <List.Item>
-              Once you hear <strong>GO</strong>, you need to click on the blocks
-              in the same sequence.
+              Once you hear{" "}
+              <button onClick={() => play()} className="go-btn">
+                <strong>GO</strong>
+              </button>{" "}
+              , you need to click on the blocks in the same sequence.
             </List.Item>
             <List.Item>The sequences will get longer.</List.Item>
             <List.Item>
