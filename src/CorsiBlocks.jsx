@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Container, SimpleGrid, Center } from "@mantine/core";
+import { Container, SimpleGrid, Center, Button } from "@mantine/core";
 import { saveAs } from "file-saver";
 import { useGlobalContext } from "./GlobalProvider";
 
@@ -19,32 +19,32 @@ const CorsiBlocks = () => {
   const [isSequenceActive, setIsSequenceActive] = useState(false);
   const [attempts, setAttempts] = useState(0);
   const [rerunSequence, setRerunSequence] = useState(false);
-  const [selectionsRecord, setSelectionsRecord] = useState([]);
-  const [correctReplications, setCorrectReplications] = useState(1);
-  const [hasDownloaded, setHasDownloaded] = useState(false);
   const [reverseSequence, setReverseSequence] = useState(false);
+  const [selectionsRecord, setSelectionsRecord] = useState([]);
+  const [correctReplications, setCorrectReplications] = useState(0);
+  const [hasDownloaded, setHasDownloaded] = useState(false);
 
+  // Update activeSequence when index, reverse flag, or rerun changes
   useEffect(() => {
-    let sequence = sequences[activeSequenceIndex];
+    let seq = sequences[activeSequenceIndex] || [];
     if (reverseSequence) {
-      sequence = [...sequence].reverse();
+      seq = [...seq].reverse();
     }
-    setActiveSequence(sequence);
+    setActiveSequence(seq);
     setSequenceIndex(-1);
     setUserSequence([]);
     setIsSequenceActive(true);
-  }, [activeSequenceIndex, reverseSequence]);
+  }, [activeSequenceIndex, reverseSequence, rerunSequence]);
 
+  // Play sequence
   useEffect(() => {
-    if (activeSequence.length === 0) return;
+    if (!isSequenceActive || activeSequence.length === 0) return;
 
-    let currentSeqIndex = 0;
-
+    let idx = 0;
     const interval = setInterval(() => {
-      setSequenceIndex(activeSequence[currentSeqIndex]);
-      currentSeqIndex++;
-
-      if (currentSeqIndex >= activeSequence.length) {
+      setSequenceIndex(activeSequence[idx]);
+      idx++;
+      if (idx >= activeSequence.length) {
         clearInterval(interval);
         setTimeout(() => {
           setSequenceIndex(-1);
@@ -54,20 +54,27 @@ const CorsiBlocks = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [activeSequence, rerunSequence]);
+  }, [activeSequence, isSequenceActive]);
 
   const handleBlockClick = (id) => {
     if (isSequenceActive) return;
-
+    if (userSequence.length >= activeSequence.length) return;
     setUserSequence((prev) => [...prev, id]);
   };
 
-  const handleClick = () => {
-    const isCorrect = userSequence.every(
-      (id, index) => id === activeSequence[index]
-    );
+  const handleDownload = () => {
+    const content = `Participant ID: ${participantId}\n\nCorsi Span: ${
+      correctReplications + 1
+    }\n\nSelections Record:\n${JSON.stringify(selectionsRecord, null, 2)}`;
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    saveAs(blob, `${participantId}.txt`);
+    setHasDownloaded(true);
+  };
 
-    console.log(isCorrect ? "Correct sequence!" : "Incorrect sequence.");
+  const handleClick = () => {
+    const isCorrect =
+      userSequence.length === activeSequence.length &&
+      userSequence.every((id, idx) => id === activeSequence[idx]);
 
     setSelectionsRecord((prev) => [
       ...prev,
@@ -75,84 +82,68 @@ const CorsiBlocks = () => {
         shownSequence: [...activeSequence],
         userSequence: [...userSequence],
         isCorrect,
+        attempt: attempts + 1,
       },
     ]);
 
     if (isCorrect) {
+      // Correct on first or second attempt
       setAttempts(0);
+      setReverseSequence(false);
       setCorrectReplications((prev) => prev + 1);
       setActiveSequenceIndex((prev) => (prev + 1) % numOfSequences);
-      console.log(`Correctly replicated sequences: ${correctReplications}`);
-      setReverseSequence(false);
-
-      if (correctReplications === numOfSequences) {
-        handleDownload();
-        setParticipantId("");
-        return;
-      }
     } else {
-      setAttempts((prev) => prev + 1);
-
-      if (attempts + 1 >= 2) {
-        console.log("Program stopped. Too many incorrect attempts.");
-        console.log(`Correctly replicated sequences: ${correctReplications}`);
-        handleDownload();
-        setParticipantId("");
-        return;
-      }
-
-      setReverseSequence(true);
-      setRerunSequence((prev) => !prev);
-      setSequenceIndex(-1);
-      setIsSequenceActive(true);
+      // Incorrect
+      setAttempts((prev) => {
+        const next = prev + 1;
+        if (next === 1) {
+          // First failure: rerun reversed
+          setReverseSequence(true);
+          setRerunSequence((r) => !r);
+        } else if (next >= 2) {
+          // Second failure: stop and download
+          handleDownload();
+          setParticipantId("");
+        }
+        return next;
+      });
     }
+
     setUserSequence([]);
   };
 
-  const handleDownload = () => {
-    const content = `
-      Participant ID: ${participantId}
-      
-      Corsi Span: ${correctReplications}
-
-      Selections Record:
-      ${JSON.stringify(selectionsRecord, null, 2)}
-    `;
-    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-    saveAs(blob, `${participantId}.txt`);
-    setHasDownloaded(true);
-  };
+  if (hasDownloaded) {
+    return <Completion />;
+  }
 
   return (
-    <>
-      {hasDownloaded ? (
-        <Completion />
-      ) : (
-        <Container fluid>
-          <SimpleGrid cols={5} spacing="xl" verticalSpacing="xl">
-            {blocks.map((block) => (
-              <div
-                key={block.id}
-                className={`${
-                  block.active ? "block-container" : "block-container-hidden"
-                } ${block.id === sequenceIndex ? "block-container-active" : ""} 
-                  ${
-                    userSequence.includes(block.id) && "block-container-active"
-                  }`}
-                onClick={() => block.active && handleBlockClick(block.id)}
-              >
-                {block.id}
-              </div>
-            ))}
-          </SimpleGrid>
-          <Center mt={100}>
-            <button className="button-container" onClick={handleClick}>
-              Done
-            </button>
-          </Center>
-        </Container>
-      )}
-    </>
+    <Container fluid>
+      <SimpleGrid cols={5} spacing="xl" verticalSpacing="xl">
+        {blocks.map((block) => (
+          <div
+            key={block.id}
+            className={[
+              block.active ? "block-container" : "block-container-hidden",
+              block.id === sequenceIndex ? "block-container-active" : null,
+              userSequence.includes(block.id) ? "block-container-active" : null,
+            ]
+              .filter(Boolean)
+              .join(" ")}
+            onClick={() => block.active && handleBlockClick(block.id)}
+          >
+            {block.id}
+          </div>
+        ))}
+      </SimpleGrid>
+      <Center mt={100}>
+        <Button
+          onClick={handleClick}
+          disabled={userSequence.length !== activeSequence.length}
+        >
+          Done
+        </Button>
+      </Center>
+    </Container>
   );
 };
 
